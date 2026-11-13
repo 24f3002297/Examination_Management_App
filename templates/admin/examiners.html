@@ -1,0 +1,38 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Examiners{% endblock %}
+
+{% block admin_content %}
+<h1>Examiners</h1>
+<a class="btn" href="{{ url_for('add_examiner') }}">+ Add Examiner</a>
+
+<table>
+  <tr><th>ID</th><th>Name</th><th>Email</th><th>Department</th><th>Phone</th><th>Status</th><th>Actions</th></tr>
+  {% for row in rows %}
+  <tr>
+    <td>{{ row.user.id }}</td>
+    <td>{{ row.user.name }}</td>
+    <td>{{ row.user.email }}</td>
+    <td>{{ row.profile.department if row.profile else '-' }}</td>
+    <td>{{ row.profile.phone if row.profile else '-' }}</td>
+    <td>{{ row.user.status }}</td>
+    <td>
+      {% if row.user.status == 'pending' %}
+        <form method="POST" action="{{ url_for('change_examiner_status', user_id=row.user.id, new_status='active') }}">
+          <button class="small">Approve</button>
+        </form>
+      {% elif row.user.status == 'active' %}
+        <form method="POST" action="{{ url_for('change_examiner_status', user_id=row.user.id, new_status='inactive') }}">
+          <button class="small red">Deactivate</button>
+        </form>
+      {% else %}
+        <form method="POST" action="{{ url_for('change_examiner_status', user_id=row.user.id, new_status='active') }}">
+          <button class="small">Activate</button>
+        </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% else %}
+  <tr><td colspan="7">No examiners yet</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

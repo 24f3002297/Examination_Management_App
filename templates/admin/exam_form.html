@@ -1,0 +1,33 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Exam{% endblock %}
+
+{% block admin_content %}
+<h1>{% if exam %}Edit Exam{% else %}Add Exam{% endif %}</h1>
+
+<form method="POST" class="form">
+  <label>Course</label>
+  <select name="course_id" required>
+    {% for c in courses %}
+    <option value="{{ c.course_id }}" {% if exam and exam.course_id == c.course_id %}selected{% endif %}>{{ c.course_name }}</option>
+    {% endfor %}
+  </select>
+
+  <label>Exam Name</label>
+  <input type="text" name="exam_name" value="{{ exam.exam_name if exam else '' }}" required>
+
+  <label>Exam Type</label>
+  <input type="text" name="exam_type" value="{{ exam.exam_type if exam else '' }}" placeholder="Viva, Practical, Written..." required>
+
+  <label>Max Marks</label>
+  <input type="number" step="0.5" name="max_marks" value="{{ exam.max_marks if exam else '' }}" required>
+
+  <label>Start Date</label>
+  <input type="date" name="exam_start_date" value="{{ exam.exam_start_date if exam else '' }}" required>
+
+  <label>End Date</label>
+  <input type="date" name="exam_end_date" value="{{ exam.exam_end_date if exam else '' }}" required>
+
+  <button type="submit">Save</button>
+  <a href="{{ url_for('admin_exams') }}">Cancel</a>
+</form>
+{% endblock %}

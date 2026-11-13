@@ -1,0 +1,21 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Change Examiner{% endblock %}
+
+{% block admin_content %}
+<h1>Change Examiner</h1>
+<p>Exam: <b>{{ slot.exam.exam_name }}</b><br>
+   Date: {{ slot.date }} ({{ slot.start_time }} - {{ slot.end_time }})<br>
+   Current examiner: {{ slot.examiner.name if slot.examiner else 'Not assigned' }}</p>
+
+<form method="POST" class="form">
+  <label>New Examiner</label>
+  <select name="examiner_id" required>
+    {% for u in examiners %}
+    <option value="{{ u.id }}" {% if slot.examiner_id == u.id %}selected{% endif %}>{{ u.name }}</option>
+    {% endfor %}
+  </select>
+
+  <button type="submit">Save</button>
+  <a href="{{ url_for('admin_slots') }}">Cancel</a>
+</form>
+{% endblock %}

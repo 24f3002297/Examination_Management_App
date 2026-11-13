@@ -1,0 +1,16 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block admin_content %}
+<h1>Admin Dashboard</h1>
+<p>Welcome, {{ session.get('name') }}</p>
+
+<div class="cards">
+  <div class="card"><h2>{{ total_students }}</h2><p>Students</p></div>
+  <div class="card"><h2>{{ total_examiners }}</h2><p>Examiners</p></div>
+  <div class="card"><h2>{{ pending_examiners }}</h2><p>Pending Examiners</p></div>
+  <div class="card"><h2>{{ total_courses }}</h2><p>Courses</p></div>
+  <div class="card"><h2>{{ total_exams }}</h2><p>Exams</p></div>
+  <div class="card"><h2>{{ total_bookings }}</h2><p>Bookings</p></div>
+</div>
+{% endblock %}

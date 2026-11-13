@@ -1,0 +1,48 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Search{% endblock %}
+
+{% block admin_content %}
+<h1>Search</h1>
+
+<form method="GET" class="inline-form">
+  <select name="type">
+    <option value="student" {% if search_type == 'student' %}selected{% endif %}>Student</option>
+    <option value="examiner" {% if search_type == 'examiner' %}selected{% endif %}>Examiner</option>
+    <option value="exam" {% if search_type == 'exam' %}selected{% endif %}>Exam</option>
+    <option value="booking" {% if search_type == 'booking' %}selected{% endif %}>Booking</option>
+  </select>
+  <input type="text" name="q" value="{{ q }}" placeholder="Type a name or ID">
+  <button type="submit">Search</button>
+</form>
+
+{% if q %}
+  {% if search_type == 'student' %}
+    <table>
+      <tr><th>ID</th><th>Name</th><th>Email</th></tr>
+      {% for s in students %}<tr><td>{{ s.id }}</td><td>{{ s.name }}</td><td>{{ s.email }}</td></tr>
+      {% else %}<tr><td colspan="3">Nothing found</td></tr>{% endfor %}
+    </table>
+
+  {% elif search_type == 'examiner' %}
+    <table>
+      <tr><th>ID</th><th>Name</th><th>Email</th><th>Status</th></tr>
+      {% for u in examiners %}<tr><td>{{ u.id }}</td><td>{{ u.name }}</td><td>{{ u.email }}</td><td>{{ u.status }}</td></tr>
+      {% else %}<tr><td colspan="4">Nothing found</td></tr>{% endfor %}
+    </table>
+
+  {% elif search_type == 'exam' %}
+    <table>
+      <tr><th>ID</th><th>Name</th><th>Course</th><th>Start</th><th>End</th></tr>
+      {% for e in exams %}<tr><td>{{ e.exam_id }}</td><td>{{ e.exam_name }}</td><td>{{ e.course.course_name }}</td><td>{{ e.exam_start_date }}</td><td>{{ e.exam_end_date }}</td></tr>
+      {% else %}<tr><td colspan="5">Nothing found</td></tr>{% endfor %}
+    </table>
+
+  {% elif search_type == 'booking' %}
+    <table>
+      <tr><th>ID</th><th>Student</th><th>Exam</th><th>Date</th><th>Status</th></tr>
+      {% for b in bookings %}<tr><td>{{ b.booking_id }}</td><td>{{ b.student.name }}</td><td>{{ b.slot.exam.exam_name }}</td><td>{{ b.slot.date }}</td><td>{{ b.status }}</td></tr>
+      {% else %}<tr><td colspan="5">Nothing found</td></tr>{% endfor %}
+    </table>
+  {% endif %}
+{% endif %}
+{% endblock %}

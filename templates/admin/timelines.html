@@ -1,0 +1,45 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Timelines{% endblock %}
+
+{% block admin_content %}
+<h1>Timelines and Open / Close</h1>
+
+<table>
+  <tr>
+    <th>Exam</th><th>Exam Dates</th><th>Deadlines</th>
+    <th>Slot Creation</th><th>Student Booking</th>
+  </tr>
+  {% for e in exams %}
+  <tr>
+    <td>{{ e.exam_name }}</td>
+    <td>{{ e.exam_start_date }} to {{ e.exam_end_date }}</td>
+
+    <td>
+      <form method="POST" action="{{ url_for('save_timeline', exam_id=e.exam_id) }}">
+        Slot creation till:
+        <input type="date" name="slot_creation_deadline" value="{{ e.slot_creation_deadline or '' }}"><br>
+        Booking till:
+        <input type="date" name="booking_deadline" value="{{ e.booking_deadline or '' }}"><br>
+        <button class="small">Save</button>
+      </form>
+    </td>
+
+    <td>
+      {% if e.slot_creation_open %}<b class="green">OPEN</b>{% else %}<b class="redtext">CLOSED</b>{% endif %}
+      <form method="POST" action="{{ url_for('toggle_slot_creation', exam_id=e.exam_id) }}">
+        <button class="small">{% if e.slot_creation_open %}Close{% else %}Open{% endif %}</button>
+      </form>
+    </td>
+
+    <td>
+      {% if e.booking_open %}<b class="green">OPEN</b>{% else %}<b class="redtext">CLOSED</b>{% endif %}
+      <form method="POST" action="{{ url_for('toggle_booking', exam_id=e.exam_id) }}">
+        <button class="small">{% if e.booking_open %}Close{% else %}Open{% endif %}</button>
+      </form>
+    </td>
+  </tr>
+  {% else %}
+  <tr><td colspan="5">No exams yet</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

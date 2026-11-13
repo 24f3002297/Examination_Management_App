@@ -1,0 +1,32 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Add Examiner{% endblock %}
+
+{% block admin_content %}
+<h1>Add Examiner</h1>
+
+<form method="POST" class="form">
+  <label>Name</label>
+  <input type="text" name="name" required>
+
+  <label>Email</label>
+  <input type="email" name="email" required>
+
+  <label>Password</label>
+  <input type="password" name="password" required>
+
+  <label>Phone</label>
+  <input type="text" name="phone" required>
+
+  <label>Qualification</label>
+  <input type="text" name="qualification" required>
+
+  <label>Experience (years)</label>
+  <input type="number" name="experience" required>
+
+  <label>Department</label>
+  <input type="text" name="department" required>
+
+  <button type="submit">Add Examiner</button>
+  <a href="{{ url_for('admin_examiners') }}">Cancel</a>
+</form>
+{% endblock %}

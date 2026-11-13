@@ -1,0 +1,22 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Rubrics{% endblock %}
+
+{% block admin_content %}
+<h1>Rubrics</h1>
+<p>Choose an exam to manage its rubrics.</p>
+
+<table>
+  <tr><th>ID</th><th>Exam</th><th>Course</th><th>Rubrics</th><th></th></tr>
+  {% for e in exams %}
+  <tr>
+    <td>{{ e.exam_id }}</td>
+    <td>{{ e.exam_name }}</td>
+    <td>{{ e.course.course_name }}</td>
+    <td>{{ e.rubrics|length }}</td>
+    <td><a class="btn small" href="{{ url_for('manage_rubrics', exam_id=e.exam_id) }}">Manage</a></td>
+  </tr>
+  {% else %}
+  <tr><td colspan="5">No exams yet</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

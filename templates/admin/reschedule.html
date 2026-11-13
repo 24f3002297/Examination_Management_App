@@ -1,0 +1,26 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Reschedule{% endblock %}
+
+{% block admin_content %}
+<h1>Reschedule Booking</h1>
+<p>Student: <b>{{ booking.student.name }}</b><br>
+   Exam: {{ booking.slot.exam.exam_name }}<br>
+   Current slot: {{ booking.slot.date }} ({{ booking.slot.start_time }} - {{ booking.slot.end_time }})</p>
+
+{% if other_slots %}
+<form method="POST" class="form">
+  <label>Move to slot</label>
+  <select name="slot_id" required>
+    {% for s in other_slots %}
+    <option value="{{ s.slot_id }}">{{ s.date }} ({{ s.start_time }} - {{ s.end_time }}) - {{ s.available_seats }} seats left</option>
+    {% endfor %}
+  </select>
+
+  <button type="submit">Move</button>
+  <a href="{{ url_for('admin_bookings') }}">Cancel</a>
+</form>
+{% else %}
+<p>No other slots with free seats for this exam.</p>
+<a href="{{ url_for('admin_bookings') }}">Back</a>
+{% endif %}
+{% endblock %}

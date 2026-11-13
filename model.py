@@ -9,6 +9,7 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(20), nullable=False)
 
+    status = db.Column(db.String(20),default="pending")
 
 class Course(db.Model):
     __tablename__ = "course_list"

@@ -1,0 +1,20 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Edit Rubric{% endblock %}
+
+{% block admin_content %}
+<h1>Edit Rubric</h1>
+
+<form method="POST" class="form">
+  <label>Criterion Name</label>
+  <input type="text" name="criterion_name" value="{{ rubric.criterion_name }}" required>
+
+  <label>Weightage</label>
+  <input type="number" step="0.5" name="weightage" value="{{ rubric.weightage }}" required>
+
+  <label>Description</label>
+  <input type="text" name="description" value="{{ rubric.description }}" required>
+
+  <button type="submit">Save</button>
+  <a href="{{ url_for('manage_rubrics', exam_id=rubric.exam_id) }}">Cancel</a>
+</form>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+
+  <div class="sidebar">
+    <h3>Admin Panel</h3>
+    <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('admin_courses') }}">Courses</a>
+    <a href="{{ url_for('admin_exams') }}">Exams</a>
+    <a href="{{ url_for('admin_rubrics') }}">Rubrics</a>
+    <a href="{{ url_for('admin_examiners') }}">Examiners</a>
+    <a href="{{ url_for('admin_timelines') }}">Timelines</a>
+    <a href="{{ url_for('admin_slots') }}">Slots</a>
+    <a href="{{ url_for('admin_bookings') }}">Bookings</a>
+    <a href="{{ url_for('admin_students') }}">Students</a>
+    <a href="{{ url_for('admin_search') }}">Search</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </div>
+
+  <div class="admin-main">
+    {% block admin_content %}{% endblock %}
+  </div>
+
+</div>
+{% endblock %}
