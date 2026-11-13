@@ -1,8 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-
-
-
-db = SQLAlchemy()
+from extensions import db
 
 class User(db.Model):
     __tablename__ = "User"
@@ -72,7 +68,7 @@ class Booking(db.Model):
     __tablename__ = "bookings"
 
     booking_id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey("User.id"), nullable=False)
     slot_id = db.Column(db.Integer, db.ForeignKey("exam_slot.slot_id"), nullable=False)
     booking_date = db.Column(db.Date, nullable=False)
     status = db.Column(db.String(30), nullable=False)
@@ -85,7 +81,7 @@ class ExaminerProfile(db.Model):
     __tablename__ = "examiner_profile"
 
     profile_id = db.Column(db.Integer, primary_key=True)
-    examiner_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, unique=True)
+    examiner_id = db.Column(db.Integer, db.ForeignKey("User.id"), nullable=False, unique=True)
     phone = db.Column(db.String(15), nullable=False)
     qualification = db.Column(db.String(100), nullable=False)
     experience = db.Column(db.Integer, nullable=False)

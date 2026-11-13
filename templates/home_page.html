@@ -1,27 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>My Website</title>
-<link rel="stylesheet" href = "{{ url_for('static', filename = 'home_page.css') }}">
- 
-</head>
- 
-<body>
- 
-  <div class="navbar">
-    <h2>My Website</h2>
-    <div class="links">
-      <a href="info.html">Info</a>
-      <a href="login.html">Login</a>
-      <a href="signup.html">Sign Up</a>
-    </div>
-  </div>
- 
-  <div class="box">
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="box">
     <h1>Welcome to my website</h1>
+
     <p>This is my home page. Please login or sign up to continue.</p>
-    <a href="signup.html">Get Started</a>
-  </div>
- 
-</body>
-</html>
+
+    <a href="{{ url_for('sign_up') }}">Get Started</a>
+</div>
+
+{% endblock %}

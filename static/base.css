@@ -1,3 +1,6 @@
+html {
+  min-height: 100%;
+}
  body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -5,11 +8,19 @@
     background-size: cover;
     background-position: center;
     background-color: #e6ebe8;
+    min-height: 100%;
+  }
+  .page-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .main-content {
+    flex:1;
   }
  
-  /* navigation bar */
   .navbar {
-    background-color: #3f55a0;
+    background-color: #5a7a63;
     padding: 15px 30px;
     overflow: hidden;
   }
@@ -36,10 +47,9 @@
  
   .navbar a:hover {
     background-color: white;
-    color: #3f55a0;
+    color: green;
   }
  
-  /* main box in the middle */
   .box {
     background-color: #e6ebe8;
     width: 450px;
@@ -70,5 +80,27 @@
   }
  
   .box a:hover {
-    background-color: #1d2226;
+    background-color: black;
+  }
+
+  .box select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  border: 2px solid #3f55a0;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+  footer{
+    text-align: center;
+    width: 100%;
+    background-color: #5a7a63;
+    margin-top: auto;
+    padding: 15px;
+    color: white;
+  }
+  footer p {
+    margin: 0;
   }
