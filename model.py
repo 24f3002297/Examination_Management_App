@@ -1,6 +1,6 @@
 from extensions import db
 
-# ---------------- USERS (admin / staff = examiner / student) ----------------
+
 class User(db.Model):
     __tablename__ = "User"
 
@@ -8,8 +8,8 @@ class User(db.Model):
     name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(20), nullable=False)          # admin / staff / student
-    status = db.Column(db.String(20), default="pending")     # pending / active / inactive
+    role = db.Column(db.String(20), nullable=False)          
+    status = db.Column(db.String(20), default="pending")    
 
     # extra details, only used by examiners
     phone = db.Column(db.String(15))
@@ -18,7 +18,7 @@ class User(db.Model):
     department = db.Column(db.String(100))
 
 
-# ---------------- COURSE ----------------
+
 class Course(db.Model):
     __tablename__ = "course_list"
 
@@ -26,18 +26,18 @@ class Course(db.Model):
     course_code = db.Column(db.String(20), nullable=False)
     course_name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(200), nullable=False)
-    status = db.Column(db.String(100), nullable=False)       # active / inactive
+    status = db.Column(db.String(100), nullable=False)       
 
     exams = db.relationship("Exam", backref="course")
 
 
-# ---------------- EXAM ----------------
+
 class Exam(db.Model):
     __tablename__ = "exam"
 
     exam_id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, db.ForeignKey("course_list.course_id"), nullable=False)
-    examiner_id = db.Column(db.Integer, db.ForeignKey("User.id"))      # examiner chosen by admin
+    examiner_id = db.Column(db.Integer, db.ForeignKey("User.id"))     
     exam_name = db.Column(db.String(100), nullable=False)
     exam_type = db.Column(db.String(100), nullable=False)
     max_marks = db.Column(db.Float, nullable=False)
@@ -55,7 +55,7 @@ class Exam(db.Model):
     slots = db.relationship("ExamSlot", backref="exam")
 
 
-# ---------------- RUBRIC (marking criteria of an exam) ----------------
+
 class Rubric(db.Model):
     __tablename__ = "examination_rubric"
 
@@ -66,7 +66,7 @@ class Rubric(db.Model):
     description = db.Column(db.String(200), nullable=False)
 
 
-# ---------------- SLOT (created by the examiner of the exam) ----------------
+
 class ExamSlot(db.Model):
     __tablename__ = "exam_slot"
 
@@ -79,7 +79,7 @@ class ExamSlot(db.Model):
 
     bookings = db.relationship("Booking", backref="slot")
 
-    # number of students booked (cancelled bookings are not counted)
+   
     @property
     def booked(self):
         count = 0
@@ -97,7 +97,7 @@ class ExamSlot(db.Model):
         return self.start_time.strftime("%H:%M") + " - " + self.end_time.strftime("%H:%M")
 
 
-# ---------------- BOOKING (student books a slot, examiner puts marks on it) ----------------
+
 class Booking(db.Model):
     __tablename__ = "bookings"
 
@@ -105,16 +105,16 @@ class Booking(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey("User.id"), nullable=False)
     slot_id = db.Column(db.Integer, db.ForeignKey("exam_slot.slot_id"), nullable=False)
     booking_date = db.Column(db.Date, nullable=False)
-    status = db.Column(db.String(30), nullable=False)        # booked / cancelled
+    status = db.Column(db.String(30), nullable=False)        
 
-    marks = db.Column(db.Float)                              # empty until the examiner evaluates
+    marks = db.Column(db.Float)                              
     remarks = db.Column(db.String(300))
 
     student = db.relationship("User")
     scores = db.relationship("Score", backref="booking")
 
 
-# ---------------- SCORE (marks given for each rubric of a booking) ----------------
+
 class Score(db.Model):
     __tablename__ = "score"
 
