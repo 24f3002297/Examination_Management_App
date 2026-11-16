@@ -21,9 +21,9 @@ def to_date(text):
 def to_time(text):
     if not text:
         return None
-    return datetime.strptime(text[:5], "%H:%M").time()     # "09:30" or "09:30:00"
+    return datetime.strptime(text[:5], "%H:%M").time()
 
-# redirect back to a part of a dashboard, like go('admin_dashboard', 'courses')
+
 def go(page, anchor="", **kw):
     return redirect(url_for(page, **kw) + "#" + anchor)
 
@@ -62,7 +62,7 @@ def home_page():
     return render_template("home_page.html")
 
 
-#            <=====LOGIN=====>
+#                                                            <=====LOGIN=====>
 @app.route('/login',methods=['GET','POST'])
 def login():
     if request.method == 'POST':
@@ -99,7 +99,7 @@ def login():
     return render_template("login.html")
 
 
-#                    <---- SIGN UP -----> 
+#                                                            <---- SIGN UP -----> 
 @app.route('/sign_up',methods=['GET','POST'])
 def sign_up():
 
@@ -110,7 +110,7 @@ def sign_up():
         confirm_password = request.form.get('confirm_password')
         role = request.form.get('role')
 
-        # Public registration is only for students and examiners.
+        
         if role not in ["student", "staff"]:
             flash("Please choose a valid account type")
             return redirect(url_for('sign_up'))
@@ -130,10 +130,9 @@ def sign_up():
             flash("USER ALREADY EXIST")
             return redirect(url_for('sign_up'))
 
-        # Students can use the portal immediately. Examiners wait for admin approval.
+        
         account_status = "active" if role == "student" else "pending"
-        new_user = User(name=name, email=email, password=password,
-                        role=role, status=account_status)
+        new_user = User(name=name, email=email, password=password,role=role, status=account_status)
         db.session.add(new_user)
         db.session.commit()
 
@@ -153,10 +152,8 @@ def info():
 #                                                                  --------------------------
 #                                                                  <====ADMIN PORTAL=====>
 #                                                                  --------------------------
-# Dashboard = only information. Every main feature (courses, exams, rubrics, examiners,
-# slots, bookings, students, search) has its own page.
 
-#   ---------- Dashboard (info only) ----------
+#                                                             ---------- Dashboard
 @app.route('/admin_dashboard')
 def admin_dashboard():
     if not admin_only():
@@ -178,7 +175,7 @@ def admin_dashboard():
     return render_template("admin/dashboard.html", stats=stats, pending=pending, latest=latest, exams=exams)
 
 
-#   ---------- Courses ----------
+#                                                    ---------- Courses ----------
 @app.route('/admin/courses')
 def admin_courses():
     if not admin_only():
@@ -186,7 +183,7 @@ def admin_courses():
 
     return render_template("admin/courses.html", courses=Course.query.all())
 
-# one function for add (course_id = 0) and edit
+
 @app.route('/admin/courses/form', defaults={'course_id': 0}, methods=['GET','POST'])
 @app.route('/admin/courses/form/<int:course_id>', methods=['GET','POST'])
 def admin_course_form(course_id):
@@ -225,8 +222,7 @@ def admin_course_delete(course_id):
         flash("Course deleted")
     return redirect(url_for('admin_courses'))
 
-
-#   ---------- Exams (examiner, deadlines and open/close switches are in the exam form) ----------
+#                                                                          Exams 
 @app.route('/admin/exams')
 def admin_exams():
     if not admin_only():
@@ -304,7 +300,7 @@ def admin_exam_delete(exam_id):
     return redirect(url_for('admin_exams'))
 
 
-#   ---------- Rubrics ----------
+#                                                              ---------- Rubrics ----------
 @app.route('/admin/rubrics')
 def admin_rubrics():
     if not admin_only():
@@ -323,7 +319,7 @@ def admin_rubrics_exam(exam_id):
         total = total + r.weightage
     return render_template("admin/rubrics_exam.html", exam=exam, total=total)
 
-# rubric_id = 0 adds a new rubric, otherwise it saves / deletes that rubric
+
 @app.route('/admin/rubrics/save/<int:rubric_id>', methods=['POST'])
 def admin_rubric_save(rubric_id):
     if not admin_only():
@@ -350,7 +346,6 @@ def admin_rubric_save(rubric_id):
         flash("Weightage must be a number")
         return back
 
-    # total weightage of the OTHER rubrics of this exam
     others = 0
     for r in exam.rubrics:
         if r != rubric:
@@ -371,7 +366,7 @@ def admin_rubric_save(rubric_id):
     return back
 
 
-#   ---------- Examiners ----------
+#                                                                  ---------- Examiners ----------
 @app.route('/admin/examiners')
 def admin_examiners():
     if not admin_only():
@@ -411,7 +406,7 @@ def admin_examiner_form():
             flash("Experience must be a number")
             return back
 
-        # admin creates the examiner, so he is active at once
+       
         user = User(name=request.form.get('name'), email=email, password=request.form.get('password'),
                     role="staff", status="active", phone=request.form.get('phone'),
                     qualification=request.form.get('qualification'), experience=experience,
@@ -424,7 +419,7 @@ def admin_examiner_form():
     return render_template("admin/examiner_form.html")
 
 
-#   ---------- Slots (view only, can filter by exam) ----------
+#                                                 ---------- Slots----------
 @app.route('/admin/slots')
 def admin_slots():
     if not admin_only():
@@ -438,7 +433,7 @@ def admin_slots():
     return render_template("admin/slots.html", slots=slots, exams=Exam.query.all(), exam_id=exam_id)
 
 
-#   ---------- Bookings (view + move a student to another slot) ----------
+#                                                ---------- Bookings----------
 @app.route('/admin/bookings')
 def admin_bookings():
     if not admin_only():
@@ -469,7 +464,7 @@ def admin_booking_move(booking_id):
     return redirect(url_for('admin_bookings'))
 
 
-#   ---------- Students ----------
+#                                                       ---------- Students ----------
 @app.route('/admin/students')
 def admin_students():
     if not admin_only():
@@ -478,7 +473,7 @@ def admin_students():
     return render_template("admin/students.html", students=User.query.filter_by(role="student").all())
 
 
-#   ---------- Search ----------
+#                                                           ---------- Search ----------
 @app.route('/admin/search')
 def admin_search():
     if not admin_only():
@@ -508,15 +503,13 @@ def admin_search():
             else:
                 bookings = Booking.query.join(User, Booking.student_id == User.id).filter(User.name.ilike("%" + q + "%")).all()
 
-    return render_template("admin/search.html", search_type=search_type, q=q,
-                           users=users, exams=exams, bookings=bookings)
+    return render_template("admin/search.html", search_type=search_type, q=q,users=users, exams=exams, bookings=bookings)
 
 
 #                                                                  --------------------------
 #                                                                  <====EXAMINER PORTAL=====>
 #                                                                  --------------------------
 
-# every examiner page starts with this check. Returns a redirect if the examiner may not enter.
 def staff_check():
     if staff_only():
         return None
@@ -525,7 +518,7 @@ def staff_check():
         session.clear()
     return redirect(url_for('login'))
 
-#   ---------- Dashboard (info only) ----------
+#                                                                ---------- Dashboard----------
 @app.route('/staff_dashboard')
 def staff_dashboard():
     blocked = staff_check()
@@ -554,7 +547,7 @@ def staff_dashboard():
     coming.sort(key=lambda s: (s.date, s.start_time))
     return render_template("staff/dashboard.html", stats=stats, exams=exams, coming=coming[:5])
 
-#   ---------- Assigned exams ----------
+#                                                          ---------- Assigned exams ----------
 @app.route('/staff/exams')
 def staff_exams():
     blocked = staff_check()
@@ -563,7 +556,7 @@ def staff_exams():
 
     return render_template("staff/exams.html", exams=Exam.query.filter_by(examiner_id=session["user_id"]).all())
 
-#   ---------- Slots (list) ----------
+#                                                            ---------- Slots----------
 @app.route('/staff/slots')
 def staff_slots():
     blocked = staff_check()
@@ -575,7 +568,7 @@ def staff_slots():
         slots = slots + e.slots
     return render_template("staff/slots.html", slots=slots)
 
-#   ---------- Slot form: create (slot_id = 0) or edit ----------
+#                                                           ---------- Slot form----------
 @app.route('/staff/slots/form', defaults={'slot_id': 0}, methods=['GET','POST'])
 @app.route('/staff/slots/form/<int:slot_id>', methods=['GET','POST'])
 def staff_slot_form(slot_id):
@@ -588,7 +581,7 @@ def staff_slot_form(slot_id):
     slot = None
     if slot_id:
         slot = ExamSlot.query.get_or_404(slot_id)
-        # only my own slot, and only before student booking starts
+      
         if slot.exam.examiner_id != me:
             flash("This is not your slot")
             return redirect(url_for('staff_slots'))
@@ -596,7 +589,6 @@ def staff_slot_form(slot_id):
             flash("Student booking has started, you cannot change this slot")
             return redirect(url_for('staff_slots'))
 
-    # exams where slots can be created right now
     open_exams = []
     for e in Exam.query.filter_by(examiner_id=me).all():
         if e.slot_creation_open and (e.slot_creation_deadline is None or today <= e.slot_creation_deadline):
@@ -668,7 +660,7 @@ def staff_slot_delete(slot_id):
         flash("Slot removed")
     return redirect(url_for('staff_slots'))
 
-#   ---------- Students booked in a slot ----------
+#                                                 ---------- Students booked in a slot ----------
 @app.route('/staff/slots/<int:slot_id>/students')
 def staff_students(slot_id):
     blocked = staff_check()
@@ -683,7 +675,7 @@ def staff_students(slot_id):
     students = [b for b in slot.bookings if b.status == "booked"]
     return render_template("staff/students.html", slot=slot, students=students)
 
-#   ---------- Evaluate one student (marks for each rubric + remarks) ----------
+#                                           ---------- Evaluate one student ----------
 @app.route('/staff/evaluate/<int:booking_id>', methods=['GET','POST'])
 def evaluate_student(booking_id):
     blocked = staff_check()
@@ -693,7 +685,6 @@ def evaluate_student(booking_id):
     booking = Booking.query.get_or_404(booking_id)
     exam = booking.slot.exam
 
-    # only the assigned examiner can evaluate his own students
     if exam.examiner_id != session["user_id"] or booking.status != "booked":
         flash("You cannot evaluate this student")
         return redirect(url_for('staff_slots'))
@@ -720,13 +711,11 @@ def evaluate_student(booking_id):
             total_score = total_score + value
             total_weight = total_weight + r.weightage
 
-        # remove old scores (when the examiner edits), then save the new ones
         for old in booking.scores:
             db.session.delete(old)
         for rubric_id in scores:
             db.session.add(Score(booking_id=booking.booking_id, rubric_id=rubric_id, score=scores[rubric_id]))
 
-        # Convert rubric points into the exam's maximum-mark scale.
         if total_weight <= 0:
             flash("The exam rubrics must have a positive total weightage")
             return redirect(url_for('evaluate_student', booking_id=booking_id))
@@ -742,7 +731,7 @@ def evaluate_student(booking_id):
         old_scores[sc.rubric_id] = sc.score
     return render_template("staff/evaluate.html", booking=booking, exam=exam, old_scores=old_scores)
 
-#   ---------- Profile ----------
+#                                                                   ---------- Profile ----------
 @app.route('/staff/profile', methods=['GET','POST'])
 def staff_profile():
     blocked = staff_check()
@@ -779,7 +768,7 @@ def staff_profile():
 def booking_sort_key(b):
     return (b.slot.date, b.slot.start_time)
 
-#   ---------- Dashboard (info only) ----------
+#                                                             ---------- Dashboard ----------
 @app.route('/student_dashboard')
 def student_dashboard():
     if not student_only():
@@ -796,7 +785,7 @@ def student_dashboard():
              ("Cancelled", len(cancelled)), ("Results published", len(results))]
     return render_template("student/dashboard.html", stats=stats, upcoming=upcoming)
 
-#   ---------- Exams: search + filter ----------
+#                                                              ---------- Exams: search ----------
 @app.route('/student/exams')
 def student_exams():
     if not student_only():
@@ -806,7 +795,7 @@ def student_exams():
     exam_type = request.args.get('exam_type', '')
     course_id = request.args.get('course_id', '')
 
-    # Ignore an invalid course filter instead of stopping the page with an error.
+  
     if course_id and not course_id.isdigit():
         course_id = ""
 
@@ -823,7 +812,7 @@ def student_exams():
     return render_template("student/exams.html", exams=query.all(), courses=courses, types=types,
                            q=q, exam_type=exam_type, course_id=course_id)
 
-#   ---------- Slots of one exam (+ book) ----------
+
 @app.route('/student/exams/<int:exam_id>/slots')
 def student_slots(exam_id):
     if not student_only():
@@ -867,7 +856,7 @@ def book_slot(slot_id):
     flash("Slot booked")
     return redirect(url_for('student_bookings'))
 
-#   ---------- My bookings (status, schedule, history) ----------
+#                                                           ---------- My bookings  ----------
 @app.route('/student/bookings')
 def student_bookings():
     if not student_only():
@@ -901,7 +890,7 @@ def cancel_booking(booking_id):
         flash("Booking cancelled")
     return redirect(url_for('student_bookings'))
 
-#   ---------- Results + feedback ----------
+#                                                                          ---------- Results + feedback ----------
 @app.route('/student/results')
 def student_results():
     if not student_only():
@@ -912,7 +901,7 @@ def student_results():
     results.sort(key=booking_sort_key, reverse=True)
     return render_template("student/results.html", results=results)
 
-#   ---------- Profile ----------
+#                                                                       ---------- Profile ----------
 @app.route('/student/profile', methods=['GET','POST'])
 def student_profile():
     if not student_only():
