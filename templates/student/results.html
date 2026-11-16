@@ -1,0 +1,17 @@
+{% extends "portal.html" %}
+{% set active = 'results' %}
+{% block heading %}Results{% endblock %}
+{% block portal_body %}
+{% for b in results %}
+<div class="card card-body mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3"><h3 class="h5 mb-3">{{ b.slot.exam.exam_name }}</h3><span class="badge text-bg-success">{{ b.marks }} / {{ b.slot.exam.max_marks }}</span></div>
+    <div class="table-responsive"><table class="table table-striped table-hover align-middle mb-0">
+        <thead><tr><th>Criterion</th><th>Your score</th><th>Out of</th></tr></thead>
+        {% for s in b.scores %}{% if s.rubric %}<tr><td>{{ s.rubric.criterion_name }}</td><td>{{ s.score }}</td><td>{{ s.rubric.weightage }}</td></tr>{% endif %}{% endfor %}
+    </table></div>
+    <p style="margin-top:14px"><b>Feedback:</b> {{ b.remarks or 'The examiner did not leave remarks.' }}</p>
+</div>
+{% else %}
+<div class="card card-body mb-4"><p>No results yet. They appear here after your examiner submits the marks.</p></div>
+{% endfor %}
+{% endblock %}

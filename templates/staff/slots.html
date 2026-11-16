@@ -1,0 +1,26 @@
+{% extends "portal.html" %}
+{% set active = 'slots' %}
+{% block heading %}My Slots{% endblock %}
+{% block portal_body %}
+<div class="card card-body mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3"><h3 class="h5 mb-3">Slots I created</h3><a class="btn btn-primary" href="{{ url_for('staff_slot_form') }}">Create slot</a></div>
+    <div class="table-responsive"><table class="table table-striped table-hover align-middle mb-0">
+        <thead><tr><th>Exam</th><th>Date</th><th>Time</th><th>Booked</th><th>Actions</th></tr></thead>
+        {% for s in slots %}
+        <tr>
+            <td>{{ s.exam.exam_name }}</td><td>{{ s.date }}</td><td>{{ s.time_text }}</td><td>{{ s.booked }} / {{ s.max_seats }}</td>
+            <td>
+                <a class="btn btn-primary btn-sm" href="{{ url_for('staff_students', slot_id=s.slot_id) }}">Students</a>
+                {% if not s.exam.booking_open and s.booked == 0 %}
+                <a class="btn btn-outline-primary btn-sm" href="{{ url_for('staff_slot_form', slot_id=s.slot_id) }}">Edit</a>
+                <form method="POST" action="{{ url_for('staff_slot_delete', slot_id=s.slot_id) }}" class="d-inline">
+                    <button class="btn btn-danger btn-sm">Remove</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}<tr><td colspan="5" class="text-center text-muted">You have not created any slots yet</td></tr>{% endfor %}
+    </table></div>
+    <p class="text-muted small">Slots can be edited or removed only before student booking opens.</p>
+</div>
+{% endblock %}

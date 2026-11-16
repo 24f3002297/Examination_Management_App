@@ -1,0 +1,23 @@
+{% extends "portal.html" %}
+{% set active = 'profile' %}
+{% block heading %}My Profile{% endblock %}
+{% block portal_body %}
+<div class="card card-body mb-4 narrow">
+    <form method="POST">
+        <div class="row g-3 mb-3">
+            <div class="col-md-6"><label class="form-label">Name</label><input class="form-control" name="name" value="{{ user.name }}" required></div>
+            <div class="col-md-6"><label class="form-label">Email</label><input class="form-control" value="{{ user.email }}" disabled></div>
+        </div>
+        <div class="row g-3 mb-3">
+            <div class="col-md-6"><label class="form-label">Phone</label><input class="form-control" name="phone" value="{{ user.phone or '' }}" required></div>
+            <div class="col-md-6"><label class="form-label">Department</label><input class="form-control" name="department" value="{{ user.department or '' }}" required></div>
+        </div>
+        <div class="row g-3 mb-3">
+            <div class="col-md-6"><label class="form-label">Qualification</label><input class="form-control" name="qualification" value="{{ user.qualification or '' }}" required></div>
+            <div class="col-md-6"><label class="form-label">Experience (years)</label><input class="form-control" type="number" name="experience" min="0" value="{{ user.experience if user.experience is not none else '' }}" required></div>
+        </div>
+        <div class="mb-3"><label class="form-label">New password</label><input class="form-control" name="password" placeholder="Leave empty to keep the old one"></div>
+        <button class="btn btn-primary">Save profile</button>
+    </form>
+</div>
+{% endblock %}

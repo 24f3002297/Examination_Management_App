@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{% block page_title %}Exam Nation Portal{% endblock %}{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='portal.css') }}">
+{% endblock %}
+{% block content %}
+<nav class="portal-nav">
+    {% if session.get('role') == 'admin' %}
+        <a class="{% if active == 'home' %}active{% endif %}" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        <a class="{% if active == 'courses' %}active{% endif %}" href="{{ url_for('admin_courses') }}">Courses</a>
+        <a class="{% if active == 'exams' %}active{% endif %}" href="{{ url_for('admin_exams') }}">Exams</a>
+        <a class="{% if active == 'rubrics' %}active{% endif %}" href="{{ url_for('admin_rubrics') }}">Rubrics</a>
+        <a class="{% if active == 'examiners' %}active{% endif %}" href="{{ url_for('admin_examiners') }}">Examiners</a>
+        <a class="{% if active == 'slots' %}active{% endif %}" href="{{ url_for('admin_slots') }}">Slots</a>
+        <a class="{% if active == 'bookings' %}active{% endif %}" href="{{ url_for('admin_bookings') }}">Bookings</a>
+        <a class="{% if active == 'students' %}active{% endif %}" href="{{ url_for('admin_students') }}">Students</a>
+        <a class="{% if active == 'search' %}active{% endif %}" href="{{ url_for('admin_search') }}">Search</a>
+    {% elif session.get('role') == 'staff' %}
+        <a class="{% if active == 'home' %}active{% endif %}" href="{{ url_for('staff_dashboard') }}">Dashboard</a>
+        <a class="{% if active == 'exams' %}active{% endif %}" href="{{ url_for('staff_exams') }}">My exams</a>
+        <a class="{% if active == 'slots' %}active{% endif %}" href="{{ url_for('staff_slots') }}">My slots</a>
+        <a class="{% if active == 'profile' %}active{% endif %}" href="{{ url_for('staff_profile') }}">Profile</a>
+    {% elif session.get('role') == 'student' %}
+        <a class="{% if active == 'home' %}active{% endif %}" href="{{ url_for('student_dashboard') }}">Dashboard</a>
+        <a class="{% if active == 'exams' %}active{% endif %}" href="{{ url_for('student_exams') }}">Exams</a>
+        <a class="{% if active == 'bookings' %}active{% endif %}" href="{{ url_for('student_bookings') }}">My bookings</a>
+        <a class="{% if active == 'results' %}active{% endif %}" href="{{ url_for('student_results') }}">Results</a>
+        <a class="{% if active == 'profile' %}active{% endif %}" href="{{ url_for('student_profile') }}">Profile</a>
+    {% endif %}
+</nav>
+<section class="page-heading">
+    <p class="small-heading">{{ session.get('role', 'Portal')|capitalize }} portal</p>
+    <h1>{% block heading %}Dashboard{% endblock %}</h1>
+</section>
+{% block portal_body %}{% endblock %}
+{% endblock %}

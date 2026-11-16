@@ -1,0 +1,20 @@
+{% extends "portal.html" %}
+{% set active = 'exams' %}
+{% block heading %}My Exams{% endblock %}
+{% block portal_body %}
+<div class="card card-body mb-4">
+    <h3 class="h5 mb-3">Exams assigned to me</h3>
+    <div class="table-responsive"><table class="table table-striped table-hover align-middle mb-0">
+        <thead><tr><th>Exam</th><th>Course</th><th>Type</th><th>Marks</th><th>Dates</th><th>Slot deadline</th><th>Booking deadline</th><th>Slot creation</th><th>Booking</th></tr></thead>
+        {% for e in exams %}
+        <tr>
+            <td>{{ e.exam_name }}</td><td>{{ e.course.course_name }}</td><td>{{ e.exam_type }}</td><td>{{ e.max_marks }}</td>
+            <td>{{ e.exam_start_date }} to {{ e.exam_end_date }}</td>
+            <td>{{ e.slot_creation_deadline or '-' }}</td><td>{{ e.booking_deadline or '-' }}</td>
+            <td><span class="badge {{ 'text-bg-success' if e.slot_creation_open else 'text-bg-secondary' }}">{{ 'Open' if e.slot_creation_open else 'Closed' }}</span></td>
+            <td><span class="badge {{ 'text-bg-success' if e.booking_open else 'text-bg-secondary' }}">{{ 'Open' if e.booking_open else 'Closed' }}</span></td>
+        </tr>
+        {% else %}<tr><td colspan="9" class="text-center text-muted">No exams assigned to you yet. The admin assigns exams to examiners.</td></tr>{% endfor %}
+    </table></div>
+</div>
+{% endblock %}

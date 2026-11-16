@@ -1,13 +1,20 @@
 {% extends "base.html" %}
-
+{% block title %}Home - Exam Nation{% endblock %}
 {% block content %}
-
 <div class="box">
-    <h1>Welcome to my website</h1>
-
-    <p>This is my home page. Please login or sign up to continue.</p>
-
-    <a href="{{ url_for('sign_up') }}">Get Started</a>
+    <h1>Welcome to Exam Nation</h1>
+    <p>A simple place to manage exams, choose slots and check results.</p>
+    {% if not session.get('user_id') %}
+        <a href="{{ url_for('sign_up') }}">Get Started</a>
+        <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+    {% else %}
+        {% if session.get('role') == 'admin' %}
+            <a href="{{ url_for('admin_dashboard') }}">Open dashboard</a>
+        {% elif session.get('role') == 'staff' %}
+            <a href="{{ url_for('staff_dashboard') }}">Open dashboard</a>
+        {% else %}
+            <a href="{{ url_for('student_dashboard') }}">Open dashboard</a>
+        {% endif %}
+    {% endif %}
 </div>
-
 {% endblock %}

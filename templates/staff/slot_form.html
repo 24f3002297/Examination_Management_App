@@ -1,0 +1,25 @@
+{% extends "portal.html" %}
+{% set active = 'slots' %}
+{% block heading %}{{ 'Edit slot' if slot else 'Create slot' }}{% endblock %}
+{% block portal_body %}
+<div class="card card-body mb-4 narrow">
+    {% if not slot and not open_exams %}
+    <p>Slot creation is not open for any of your exams right now.</p>
+    <a class="btn btn-outline-primary" href="{{ url_for('staff_slots') }}">Back</a>
+    {% else %}
+    <form method="POST">
+        <div class="mb-3"><label class="form-label">Exam</label>
+            {% if slot %}<input class="form-control" value="{{ slot.exam.exam_name }}" disabled>
+            {% else %}<select class="form-select" name="exam_id">{% for e in open_exams %}<option value="{{ e.exam_id }}">{{ e.exam_name }}</option>{% endfor %}</select>{% endif %}
+        </div>
+        <div class="mb-3"><label class="form-label">Date</label><input class="form-control" type="date" name="date" value="{{ slot.date if slot else '' }}" required></div>
+        <div class="row g-3 mb-3">
+            <div class="col-md-6"><label class="form-label">Start time</label><input class="form-control" type="time" name="start_time" value="{{ slot.start_time if slot else '' }}" required></div>
+            <div class="col-md-6"><label class="form-label">End time</label><input class="form-control" type="time" name="end_time" value="{{ slot.end_time if slot else '' }}" required></div>
+        </div>
+        <div class="mb-3"><label class="form-label">Seats</label><input class="form-control" type="number" name="max_seats" min="1" value="{{ slot.max_seats if slot else '' }}" required></div>
+        <div class="mt-3 d-flex gap-2"><button class="btn btn-primary">Save slot</button><a class="btn btn-outline-primary" href="{{ url_for('staff_slots') }}">Cancel</a></div>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

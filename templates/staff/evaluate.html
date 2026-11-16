@@ -1,0 +1,20 @@
+{% extends "portal.html" %}
+{% set active = 'slots' %}
+{% block heading %}Evaluate {{ booking.student.name }}{% endblock %}
+{% block portal_body %}
+<div class="card card-body mb-4 narrow">
+    <p>{{ exam.exam_name }} | {{ booking.slot.date }}, {{ booking.slot.time_text }} | Maximum marks: {{ exam.max_marks }}</p>
+    <form method="POST">
+        {% for r in exam.rubrics %}
+        <div class="mb-3">
+            <label class="form-label">{{ r.criterion_name }} (out of {{ r.weightage }})</label>
+            <input class="form-control" type="number" step="any" min="0" max="{{ r.weightage }}" name="score_{{ r.rubric_id }}" value="{{ old_scores.get(r.rubric_id, '') }}" required>
+            <p class="text-muted small">{{ r.description }}</p>
+        </div>
+        {% endfor %}
+        <div class="mb-3"><label class="form-label">Remarks for the student</label>
+            <input class="form-control" name="remarks" value="{{ booking.remarks or '' }}" maxlength="300"></div>
+        <div class="mt-3 d-flex gap-2"><button class="btn btn-primary">Submit marks</button><a class="btn btn-outline-primary" href="{{ url_for('staff_students', slot_id=booking.slot_id) }}">Cancel</a></div>
+    </form>
+</div>
+{% endblock %}

@@ -1,20 +1,13 @@
-{% extends "admin/admin_base.html" %}
-{% block title %}Students{% endblock %}
-
-{% block admin_content %}
-<h1>All Students</h1>
-
-<table>
-  <tr><th>ID</th><th>Name</th><th>Email</th><th>Status</th></tr>
-  {% for s in students %}
-  <tr>
-    <td>{{ s.id }}</td>
-    <td>{{ s.name }}</td>
-    <td>{{ s.email }}</td>
-    <td>{{ s.status }}</td>
-  </tr>
-  {% else %}
-  <tr><td colspan="4">No students yet</td></tr>
-  {% endfor %}
-</table>
+{% extends "portal.html" %}
+{% set active = 'students' %}
+{% block heading %}Students{% endblock %}
+{% block portal_body %}
+<div class="card card-body mb-4">
+    <h3 class="h5 mb-3">All students</h3>
+    <div class="table-responsive"><table class="table table-striped table-hover align-middle mb-0">
+        <thead><tr><th>ID</th><th>Name</th><th>Email</th></tr></thead>
+        {% for u in students %}<tr><td>{{ u.id }}</td><td>{{ u.name }}</td><td>{{ u.email }}</td></tr>
+        {% else %}<tr><td colspan="3" class="text-center text-muted">No students yet</td></tr>{% endfor %}
+    </table></div>
+</div>
 {% endblock %}

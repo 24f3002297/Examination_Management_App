@@ -1,32 +1,24 @@
-{% extends "admin/admin_base.html" %}
-{% block title %}Add Examiner{% endblock %}
-
-{% block admin_content %}
-<h1>Add Examiner</h1>
-
-<form method="POST" class="form">
-  <label>Name</label>
-  <input type="text" name="name" required>
-
-  <label>Email</label>
-  <input type="email" name="email" required>
-
-  <label>Password</label>
-  <input type="password" name="password" required>
-
-  <label>Phone</label>
-  <input type="text" name="phone" required>
-
-  <label>Qualification</label>
-  <input type="text" name="qualification" required>
-
-  <label>Experience (years)</label>
-  <input type="number" name="experience" required>
-
-  <label>Department</label>
-  <input type="text" name="department" required>
-
-  <button type="submit">Add Examiner</button>
-  <a href="{{ url_for('admin_examiners') }}">Cancel</a>
-</form>
+{% extends "portal.html" %}
+{% set active = 'examiners' %}
+{% block heading %}Add examiner{% endblock %}
+{% block portal_body %}
+<div class="card card-body mb-4 narrow">
+    <form method="POST">
+        <div class="row g-3 mb-3">
+            <div class="col-md-6"><label class="form-label">Name</label><input class="form-control" name="name" required></div>
+            <div class="col-md-6"><label class="form-label">Email</label><input class="form-control" type="email" name="email" required></div>
+        </div>
+        <div class="row g-3 mb-3">
+            <div class="col-md-6"><label class="form-label">Password</label><input class="form-control" name="password" required></div>
+            <div class="col-md-6"><label class="form-label">Phone</label><input class="form-control" name="phone" required></div>
+        </div>
+        <div class="row g-3 mb-3">
+            <div class="col-md-6"><label class="form-label">Qualification</label><input class="form-control" name="qualification" required></div>
+            <div class="col-md-6"><label class="form-label">Experience (years)</label><input class="form-control" type="number" name="experience" min="0" required></div>
+        </div>
+        <div class="mb-3"><label class="form-label">Department</label><input class="form-control" name="department" required></div>
+        <p class="text-muted small">Examiners added by the admin can log in at once.</p>
+        <div class="mt-3 d-flex gap-2"><button class="btn btn-primary">Add examiner</button><a class="btn btn-outline-primary" href="{{ url_for('admin_examiners') }}">Cancel</a></div>
+    </form>
+</div>
 {% endblock %}

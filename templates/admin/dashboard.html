@@ -1,16 +1,52 @@
-{% extends "admin/admin_base.html" %}
-{% block title %}Admin Dashboard{% endblock %}
+{% extends "portal.html" %}
+{% set active = 'home' %}
+{% block heading %}Admin Dashboard{% endblock %}
+{% block portal_body %}
+<div class="row g-3 mb-4">
+    {% for label, value in stats %}
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card"><strong>{{ value }}</strong><span>{{ label }}</span></div>
+    </div>
+    {% endfor %}
+</div>
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card card-body h-100">
+            <h3 class="h5 mb-3">Examiners waiting for approval</h3>
+            <div class="table-responsive"><table class="table table-striped align-middle mb-0">
+                <thead><tr><th>Name</th><th>Email</th></tr></thead>
+                {% for u in pending %}<tr><td>{{ u.name }}</td><td>{{ u.email }}</td></tr>
+                {% else %}<tr><td colspan="2" class="text-center text-muted">No one is waiting</td></tr>{% endfor %}
+            </table></div>
+            {% if pending %}<div class="mt-3"><a class="btn btn-primary btn-sm" href="{{ url_for('admin_examiners') }}">Review examiners</a></div>{% endif %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card card-body h-100">
+            <h3 class="h5 mb-3">Latest bookings</h3>
+            <div class="table-responsive"><table class="table table-striped align-middle mb-0">
+                <thead><tr><th>Student</th><th>Exam</th><th>Status</th></tr></thead>
+                {% for b in latest %}
+                <tr><td>{{ b.student.name }}</td><td>{{ b.slot.exam.exam_name }}</td>
+                    <td><span class="badge {{ 'text-bg-success' if b.status == 'booked' else 'text-bg-secondary' }}">{{ b.status }}</span></td></tr>
+                {% else %}<tr><td colspan="3" class="text-center text-muted">No bookings yet</td></tr>{% endfor %}
+            </table></div>
+        </div>
+    </div>
+</div>
 
-{% block admin_content %}
-<h1>Admin Dashboard</h1>
-<p>Welcome, {{ session.get('name') }}</p>
-
-<div class="cards">
-  <div class="card"><h2>{{ total_students }}</h2><p>Students</p></div>
-  <div class="card"><h2>{{ total_examiners }}</h2><p>Examiners</p></div>
-  <div class="card"><h2>{{ pending_examiners }}</h2><p>Pending Examiners</p></div>
-  <div class="card"><h2>{{ total_courses }}</h2><p>Courses</p></div>
-  <div class="card"><h2>{{ total_exams }}</h2><p>Exams</p></div>
-  <div class="card"><h2>{{ total_bookings }}</h2><p>Bookings</p></div>
+<div class="card card-body mb-4">
+    <h3 class="h5 mb-3">Exams at a glance</h3>
+    <div class="table-responsive"><table class="table table-striped align-middle mb-0">
+        <thead><tr><th>Exam</th><th>Course</th><th>Examiner</th><th>Slots</th><th>Slot creation</th><th>Booking</th></tr></thead>
+        {% for e in exams %}
+        <tr>
+            <td>{{ e.exam_name }}</td><td>{{ e.course.course_name }}</td>
+            <td>{{ e.examiner.name if e.examiner else 'Not assigned' }}</td><td>{{ e.slots|length }}</td>
+            <td><span class="badge {{ 'text-bg-success' if e.slot_creation_open else 'text-bg-secondary' }}">{{ 'Open' if e.slot_creation_open else 'Closed' }}</span></td>
+            <td><span class="badge {{ 'text-bg-success' if e.booking_open else 'text-bg-secondary' }}">{{ 'Open' if e.booking_open else 'Closed' }}</span></td>
+        </tr>
+        {% else %}<tr><td colspan="6" class="text-center text-muted">No exams yet</td></tr>{% endfor %}
+    </table></div>
 </div>
 {% endblock %}

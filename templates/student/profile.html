@@ -1,0 +1,13 @@
+{% extends "portal.html" %}
+{% set active = 'profile' %}
+{% block heading %}My Profile{% endblock %}
+{% block portal_body %}
+<div class="card card-body mb-4 narrow">
+    <form method="POST">
+        <div class="mb-3"><label class="form-label">Name</label><input class="form-control" name="name" value="{{ user.name }}" required></div>
+        <div class="mb-3"><label class="form-label">Email</label><input class="form-control" value="{{ user.email }}" disabled></div>
+        <div class="mb-3"><label class="form-label">New password</label><input class="form-control" name="password" placeholder="Leave empty to keep the old one"></div>
+        <button class="btn btn-primary">Save profile</button>
+    </form>
+</div>
+{% endblock %}

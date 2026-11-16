@@ -1,0 +1,37 @@
+{% extends "portal.html" %}
+{% set active = 'home' %}
+{% block heading %}Examiner Dashboard{% endblock %}
+{% block portal_body %}
+<div class="row g-3 mb-4">
+    {% for label, value in stats %}
+    <div class="col-sm-6 col-lg-3">
+        <div class="stat-card"><strong>{{ value }}</strong><span>{{ label }}</span></div>
+    </div>
+    {% endfor %}
+</div>
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card card-body h-100">
+            <h3 class="h5 mb-3">My exams</h3>
+            <div class="table-responsive"><table class="table table-striped align-middle mb-0">
+                <thead><tr><th>Exam</th><th>Course</th><th>Slot creation</th></tr></thead>
+                {% for e in exams %}
+                <tr><td>{{ e.exam_name }}</td><td>{{ e.course.course_name }}</td>
+                    <td><span class="badge {{ 'text-bg-success' if e.slot_creation_open else 'text-bg-secondary' }}">{{ 'Open' if e.slot_creation_open else 'Closed' }}</span></td></tr>
+                {% else %}<tr><td colspan="3" class="text-center text-muted">No exams assigned to you yet</td></tr>{% endfor %}
+            </table></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card card-body h-100">
+            <h3 class="h5 mb-3">Next slots</h3>
+            <div class="table-responsive"><table class="table table-striped align-middle mb-0">
+                <thead><tr><th>Exam</th><th>Date</th><th>Time</th><th>Booked</th></tr></thead>
+                {% for s in coming %}
+                <tr><td>{{ s.exam.exam_name }}</td><td>{{ s.date }}</td><td>{{ s.time_text }}</td><td>{{ s.booked }} / {{ s.max_seats }}</td></tr>
+                {% else %}<tr><td colspan="4" class="text-center text-muted">No upcoming slots</td></tr>{% endfor %}
+            </table></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

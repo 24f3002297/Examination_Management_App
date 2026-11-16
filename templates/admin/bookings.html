@@ -1,24 +1,28 @@
-{% extends "admin/admin_base.html" %}
-{% block title %}Bookings{% endblock %}
-
-{% block admin_content %}
-<h1>All Bookings</h1>
-
-<table>
-  <tr><th>ID</th><th>Student</th><th>Exam</th><th>Slot Date</th><th>Time</th><th>Booked On</th><th>Status</th><th></th></tr>
-  {% for b in bookings %}
-  <tr>
-    <td>{{ b.booking_id }}</td>
-    <td>{{ b.student.name }}</td>
-    <td>{{ b.slot.exam.exam_name }}</td>
-    <td>{{ b.slot.date }}</td>
-    <td>{{ b.slot.start_time }} - {{ b.slot.end_time }}</td>
-    <td>{{ b.booking_date }}</td>
-    <td>{{ b.status }}</td>
-    <td><a class="btn small" href="{{ url_for('reschedule_booking', booking_id=b.booking_id) }}">Reschedule</a></td>
-  </tr>
-  {% else %}
-  <tr><td colspan="8">No bookings yet</td></tr>
-  {% endfor %}
-</table>
+{% extends "portal.html" %}
+{% set active = 'bookings' %}
+{% block heading %}Bookings{% endblock %}
+{% block portal_body %}
+<div class="card card-body mb-4">
+    <h3 class="h5 mb-3">All bookings</h3>
+    <div class="table-responsive"><table class="table table-striped table-hover align-middle mb-0">
+        <thead><tr><th>ID</th><th>Student</th><th>Exam</th><th>Date</th><th>Time</th><th>Status</th><th>Move to another slot</th></tr></thead>
+        {% for b in bookings %}
+        <tr>
+            <td>{{ b.booking_id }}</td><td>{{ b.student.name }}</td><td>{{ b.slot.exam.exam_name }}</td>
+            <td>{{ b.slot.date }}</td><td>{{ b.slot.time_text }}</td>
+            <td><span class="badge {{ 'text-bg-success' if b.status == 'booked' else 'text-bg-secondary' }}">{{ b.status }}</span></td>
+            <td>
+                {% if b.status == 'booked' %}
+                <form method="POST" action="{{ url_for('admin_booking_move', booking_id=b.booking_id) }}" class="d-flex gap-2">
+                    <select class="form-select form-select-sm" name="slot_id">
+                        {% for s in b.slot.exam.slots %}{% if s.slot_id != b.slot_id and s.seats_left > 0 %}<option value="{{ s.slot_id }}">{{ s.date }}, {{ s.time_text }}</option>{% endif %}{% endfor %}
+                    </select>
+                    <button class="btn btn-primary btn-sm">Move</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}<tr><td colspan="7" class="text-center text-muted">No bookings yet</td></tr>{% endfor %}
+    </table></div>
+</div>
 {% endblock %}
